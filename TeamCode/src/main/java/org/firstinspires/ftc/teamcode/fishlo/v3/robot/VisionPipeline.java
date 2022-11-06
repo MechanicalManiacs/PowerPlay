@@ -30,24 +30,31 @@ public class VisionPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        Mat img = input;
+        Mat img = input.clone();
+        //Convert to grayscale
         Mat gray = new Mat();
         Imgproc.cvtColor(img, gray, Imgproc.COLOR_BGR2GRAY);
+        //Threshold the image
         Mat threshold = new Mat();
         Imgproc.threshold(gray, threshold, 127, 255, Imgproc.THRESH_BINARY);
+        //Find all contours
         List<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat();
         Imgproc.findContours(threshold, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        int i = 0;
+        int k = 0;
 
-        for (MatOfPoint contour : contours) {
-            if (i == 0) {
-                i = 1;
+        for (int i = 0; i < contours.size(); i++) {
+            //Skip the first iteration
+            if (k == 0) {
+                k = 1;
                 continue;
             }
+            MatOfPoint contour = contours.get(i);
+            //Convert the contours to MatOfPoint2f
             MatOfPoint2f contour2f = new MatOfPoint2f();
             contour.convertTo(contour2f, CvType.CV_32F);
+            //use ApproxPolyDP to approximate the contours to polygonal curves
             MatOfPoint2f approx = new MatOfPoint2f();
             Imgproc.approxPolyDP(contour2f, approx, 0.01*Imgproc.arcLength(contour2f, true), true);
 
@@ -58,18 +65,20 @@ public class VisionPipeline extends OpenCvPipeline {
 
             int x = 0;
             int y = 0;
-            Point xy = new Point();
 
-            Moments M = Imgproc.moments(contour);
-            if (M.m00 != 0) {
-                x = (int) (M.m10 / M.m00);
-                y = (int) (M.m10 / M.m00);
+            Moments m = Imgproc.moments(contour);
+            if (m.m00 != 0) {
+                x = (int) (m.m10 / m.m00);
+                y = (int) (m.m10 / m.m00);
             }
-            if (approx.size().height == 3) {
+
+            Point xy = new Point(x, y);
+
+            if (approx.total() == 3) {
                 Imgproc.putText(img, "Triangle", xy, Imgproc.FONT_HERSHEY_SIMPLEX, 0.6, new Scalar(255, 255, 255), 2);
                 pos = ConePosition.POS1;
             }
-            else if (approx.size().height == 4) {
+            else if (approx.total() == 4) {
                 Imgproc.putText(img, "Square", xy, Imgproc.FONT_HERSHEY_SIMPLEX, 0.6, new Scalar(255, 255, 255), 2);
                 pos = ConePosition.POS2;
             }

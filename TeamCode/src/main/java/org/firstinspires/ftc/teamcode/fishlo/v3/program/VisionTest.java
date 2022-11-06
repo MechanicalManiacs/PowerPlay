@@ -27,6 +27,7 @@ public class VisionTest extends FishloAutonomousProgram {
 
     @Override
     public void main() {
-        super.main();
+        telemetry.addData("Last Recieved Position: ", pos);
+        telemetry.update();
     }
 }
