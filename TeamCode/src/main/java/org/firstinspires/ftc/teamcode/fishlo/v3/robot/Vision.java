@@ -1,31 +1,19 @@
 package org.firstinspires.ftc.teamcode.fishlo.v3.robot;
 
-import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.FtcDashboard;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.SubSystem;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
-import org.opencv.imgproc.Moments;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Vision extends SubSystem {
 
     private VisionPipeline pipeline;
-    private OpenCvCamera webcam;
+    private OpenCvWebcam webcam;
     VisionPipeline.ConePosition conePosition = VisionPipeline.ConePosition.NULL;
 
     public Vision(Robot robot) {
@@ -34,10 +22,6 @@ public class Vision extends SubSystem {
 
     @Override
     public void init() {
-
-    }
-
-    public void initVision() {
         int cameraMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(robot.hardwareMap.get(WebcamName.class, "webcam 1"), cameraMonitorViewId);
 
@@ -48,6 +32,7 @@ public class Vision extends SubSystem {
             public void onOpened() {
                 webcam.setPipeline(pipeline);
                 webcam.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
+                FtcDashboard.getInstance().startCameraStream(webcam, 30);
             }
 
             @Override
@@ -60,6 +45,19 @@ public class Vision extends SubSystem {
     public VisionPipeline.ConePosition getConePosition() {
         conePosition = pipeline.getConePosition();
         return conePosition;
+    }
+
+    public void setThresholds(double t1, double t2) {
+        pipeline.setThreshold1(t1);
+        pipeline.setThreshold2(t2);
+    }
+
+    public void setSens(int sens) {
+        pipeline.setSens(sens);
+    }
+
+    public int getSens() {
+        return pipeline.getSens();
     }
 
     @Override
