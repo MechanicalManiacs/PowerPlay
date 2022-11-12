@@ -30,37 +30,35 @@ public class VisionTest extends FishloAutonomousProgram {
     @Override
     public void preMain() {
         telemetry.addLine("Initialized");
-        telemetry.addLine("Initialized");
-        telemetry.addLine("Initialized");
         telemetry.update();
-        telemetry.setAutoClear(false);
-        sum = 0;
-        count = 0;
+        telemetry.setAutoClear(true);
+//        sum = 0;
+//        count = 0;
         while (!isStarted()) {
             pos = vision.getConePosition();
             telemetry.addData("Cone Position", pos);
             telemetry.update();
-            System.out.println(pos);
-            String p = pos.toString();
-            int len = p.length();
-            int num = Integer.parseInt(Character.toString(p.charAt(len-1)));
-            sum += num;
-            count++;
+            System.out.println("Init pos: " + pos);
+//            String p = pos.toString();
+//            int len = p.length();
+//            int num = Integer.parseInt(Character.toString(p.charAt(len-1)));
+//            sum += num;
+//            count++;
         }
     }
 
     @Override
     public void main() {
-        double fp = sum/count;
-        String dVal = Double.toString(fp);
-        BigDecimal fp2 = new BigDecimal(dVal);
-        fp2 = fp2.setScale(0, BigDecimal.ROUND_HALF_UP);
-        int finalPos = Integer.parseInt(fp2.toString());
+//        double fp = sum/count;
+//        String dVal = Double.toString(fp);
+//        BigDecimal fp2 = new BigDecimal(dVal);
+//        fp2 = fp2.setScale(0, BigDecimal.ROUND_HALF_UP);
+//        int finalPos = Integer.parseInt(fp2.toString());
         telemetry.addData("Last Recieved Position", pos);
         telemetry.update();
-        telemetry.addData("Rolling Average Position, ", finalPos);
-        telemetry.update();
-        System.out.println(finalPos);
+//        telemetry.addData("Rolling Average Position, ", finalPos);
+//        telemetry.update();
+        System.out.println("Final: " + pos);
     }
 
 
