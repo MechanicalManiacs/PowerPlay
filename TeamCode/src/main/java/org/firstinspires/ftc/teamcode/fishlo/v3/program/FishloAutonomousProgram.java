@@ -14,7 +14,9 @@ public class FishloAutonomousProgram extends AutonomousProgram {
     }
 
     @Override
-    public void main() {}
+    public void main() {
+
+    }
 
     @Override
     public void preMain() {}
