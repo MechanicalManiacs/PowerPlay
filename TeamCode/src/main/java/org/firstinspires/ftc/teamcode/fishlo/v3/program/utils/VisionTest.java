@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.fishlo.v3.program;
+package org.firstinspires.ftc.teamcode.fishlo.v3.program.utils;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.apache.commons.math3.dfp.DfpField;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
 import org.firstinspires.ftc.teamcode.fishlo.v3.robot.VisionPipeline;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 

@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-public class redAutonomous extends FishloAutonomousProgram {
+public class redLowAutonomous extends FishloAutonomousProgram {
     SampleMecanumDrive mdrive;
     Pose2d startPose;
     @Override
@@ -27,14 +27,14 @@ public class redAutonomous extends FishloAutonomousProgram {
         TrajectorySequence ts = mdrive.trajectorySequenceBuilder();
         startPose = new Pose2d(60, -36, Math.toRadians(90));
         // goes to (36, -60)
-        drive.trajectorySequenceBuilder(startPose)
+        mdrive.trajectorySequenceBuilder(startPose)
                 .turn(Math.toRadians(45))
                 .forward(23.5)
                 .turn(Math.toRadians(-45))
                 .forward(24)
-                .displacementMarker(() -> CRServo)
-                //drop cup on to low junction
-                .
+                .addDisplacementMarker(() -> {
+                  //drop cone on low junction
+                })
                 .build();
 
     }
