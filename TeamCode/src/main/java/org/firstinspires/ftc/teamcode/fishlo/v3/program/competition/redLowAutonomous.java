@@ -24,7 +24,6 @@ public class redLowAutonomous extends FishloAutonomousProgram {
     public void main() {
         mdrive = new SampleMecanumDrive(hardwareMap);
         mdrive.setPoseEstimate(new Pose2d());
-        TrajectorySequence ts = mdrive.trajectorySequenceBuilder();
         startPose = new Pose2d(60, -36, Math.toRadians(90));
         // goes to (36, -60)
         mdrive.trajectorySequenceBuilder(startPose)
