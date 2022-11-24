@@ -12,7 +12,6 @@ public class FishloAutonomousProgram extends AutonomousProgram {
     @Override
     protected Robot buildRobot() {
         Fishlo fishlo = new Fishlo(this);
-        vision = (Vision) fishlo.getSubSystem("Vision");
         return fishlo;
     }
 
