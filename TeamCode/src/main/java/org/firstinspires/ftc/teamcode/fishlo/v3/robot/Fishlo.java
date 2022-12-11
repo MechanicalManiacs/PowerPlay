@@ -8,7 +8,7 @@ public class Fishlo extends Robot {
 
     public Fishlo(OpMode opMode) {
         super(opMode);
-
+        putSubSystem("Drive", new Drive(this));
         putSubSystem("Vision", new Vision(this));
     }
 
