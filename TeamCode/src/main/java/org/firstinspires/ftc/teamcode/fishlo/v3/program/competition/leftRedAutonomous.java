@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class leftRedAutonomous extends FishloAutonomousProgram {
     SampleMecanumDrive mdrive;
     Pose2d startPose;
+    VisionPipeline.ConePosition conePos;
     @Override
     protected Robot buildRobot() {
         return super.buildRobot();
@@ -18,7 +19,12 @@ public class leftRedAutonomous extends FishloAutonomousProgram {
 
     @Override
     public void preMain() {
-
+        telemetry.setAutoClear(true);
+        while (opModeInInit()) {
+            conePos = VisionPipeline.ConePosition.NULL;
+            telemetry.addData("Cone Position", conePos);
+            telemetry.update();
+        }
     }
 
     @Override
@@ -28,7 +34,7 @@ public class leftRedAutonomous extends FishloAutonomousProgram {
        // TrajectorySequence ts = mdrive.trajectorySequenceBuilder();///////////////////////////////////////need to fix
         startPose = new Pose2d(60, -36, Math.toRadians(90));
         // goes to (36, -60)
-        if (vision.getConePosition() == VisionPipeline.ConePosition.POS1) {
+        if (conePos == VisionPipeline.ConePosition.POS1) {
             mdrive.trajectorySequenceBuilder(startPose)
                     .forward(24)
                     .turn(Math.toRadians(45))
@@ -39,7 +45,7 @@ public class leftRedAutonomous extends FishloAutonomousProgram {
                     .forward(24)
                     .build();
         }
-        if (vision.getConePosition() == VisionPipeline.ConePosition.POS2) {
+        if (conePos == VisionPipeline.ConePosition.POS2) {
             mdrive.trajectorySequenceBuilder(startPose)
                     .forward(24)
                     .turn(Math.toRadians(45))
@@ -48,7 +54,7 @@ public class leftRedAutonomous extends FishloAutonomousProgram {
                     })
                     .build();
         }
-        if (vision.getConePosition() == VisionPipeline.ConePosition.POS3) {
+        if (conePos == VisionPipeline.ConePosition.POS3) {
             mdrive.trajectorySequenceBuilder(startPose)
                     .forward(24)
                     .turn(Math.toRadians(45))
@@ -60,6 +66,4 @@ public class leftRedAutonomous extends FishloAutonomousProgram {
                     .build();
         }
     }
-
-
 }
