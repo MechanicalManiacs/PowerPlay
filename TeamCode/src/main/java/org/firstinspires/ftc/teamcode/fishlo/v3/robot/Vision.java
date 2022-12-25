@@ -23,7 +23,7 @@ public class Vision extends SubSystem {
     @Override
     public void init() {
         int cameraMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(robot.hardwareMap.get(WebcamName.class, "webcam 1"), cameraMonitorViewId);
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(robot.hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         pipeline = new VisionPipeline();
 
@@ -31,7 +31,7 @@ public class Vision extends SubSystem {
             @Override
             public void onOpened() {
                 webcam.setPipeline(pipeline);
-                webcam.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
+                webcam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
                 FtcDashboard.getInstance().startCameraStream(webcam, 30);
             }
 
@@ -45,19 +45,6 @@ public class Vision extends SubSystem {
     public VisionPipeline.ConePosition getConePosition() {
         conePosition = pipeline.getConePosition();
         return conePosition;
-    }
-
-    public void setThresholds(double t1, double t2) {
-        pipeline.setThreshold1(t1);
-        pipeline.setThreshold2(t2);
-    }
-
-    public void setSens(int sens) {
-        pipeline.setSens(sens);
-    }
-
-    public int getSens() {
-        return pipeline.getSens();
     }
 
     @Override
