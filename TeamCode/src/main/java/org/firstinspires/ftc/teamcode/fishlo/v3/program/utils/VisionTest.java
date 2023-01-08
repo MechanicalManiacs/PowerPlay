@@ -33,6 +33,7 @@ public class VisionTest extends FishloAutonomousProgram {
         telemetry.addLine("Initialized");
         telemetry.update();
         telemetry.setAutoClear(true);
+        vision.initVision();
 //        sum = 0;
 //        count = 0;
         while (!isStarted()) {

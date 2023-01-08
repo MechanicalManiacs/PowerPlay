@@ -22,6 +22,10 @@ public class Vision extends SubSystem {
 
     @Override
     public void init() {
+
+    }
+
+    public void initVision() {
         int cameraMonitorViewId = robot.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", robot.hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(robot.hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 

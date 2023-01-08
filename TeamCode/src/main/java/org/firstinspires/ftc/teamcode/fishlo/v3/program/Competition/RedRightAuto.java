@@ -4,11 +4,11 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
 import org.firstinspires.ftc.teamcode.fishlo.v3.robot.VisionPipeline;
 import org.firstinspires.ftc.teamcode.robot.Robot;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 public class RedRightAuto extends FishloAutonomousProgram {
@@ -24,10 +24,11 @@ public class RedRightAuto extends FishloAutonomousProgram {
 
     @Override
     public void preMain() {
-        mecanumDrive = new SampleMecanumDrive(hardwareMap);
+        mecanumDrive = drive.getInstance();
         startPose = new Pose2d(-72, -36, 0);
         conePosition = VisionPipeline.ConePosition.NULL;
         telemetry.setAutoClear(true);
+        vision.initVision();
         while (opModeInInit()) {
             conePosition = vision.getConePosition();
             telemetry.addData("Cone Position", conePosition);
@@ -58,23 +59,12 @@ public class RedRightAuto extends FishloAutonomousProgram {
                 .splineTo(new Vector2d(-18, -65), Math.toRadians(-90))
                 //1st CONE
                 .back(35)
-                .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
-                    //move arm
-                })
                 .forward(35)
-
                 //2nd CONE
                 .back(35)
-                .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
-                    //move arm
-                })
                 .forward(35)
-
                 //3rd CONE
                 .back(35)
-                .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
-                    //move arm
-                })
                 .forward(park)
                 .build();
         mecanumDrive.followTrajectorySequence(sequence);
