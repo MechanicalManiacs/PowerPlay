@@ -6,12 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
-import org.firstinspires.ftc.teamcode.fishlo.v3.robot.ScissorLift;
+import org.firstinspires.ftc.teamcode.fishlo.v3.robot.LinearSlide;
 import org.firstinspires.ftc.teamcode.fishlo.v3.robot.VisionPipeline;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Autonomous
 public class RedLeftAuto extends FishloAutonomousProgram {
@@ -42,7 +40,6 @@ public class RedLeftAuto extends FishloAutonomousProgram {
 
     @Override
     public void main() {
-        AtomicInteger custom = new AtomicInteger(1000);
         int park = 0;
         switch (conePosition) {
             case POS1:
@@ -60,47 +57,47 @@ public class RedLeftAuto extends FishloAutonomousProgram {
                 .splineTo(new Vector2d(-18, 60), Math.toRadians(90))
                 //1+1
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.HIGH);
+                    lift.moveAndDrop(LinearSlide.Level.HIGH);
                 })
                 .back(35)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.CUSTOM.setCustom(custom.get()));
+                    lift.moveAndDrop(LinearSlide.Level.RESET);
                 })
                 .forward(35)
                 //1+2
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.HIGH);
+                    lift.moveAndDrop(LinearSlide.Level.HIGH);
                 })
                 .back(35)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.CUSTOM.setCustom(custom.addAndGet(-50)));
+                    lift.moveAndDrop(LinearSlide.Level.RESET);
                 })
                 .forward(35)
                 //1+3
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.HIGH);
+                    lift.moveAndDrop(LinearSlide.Level.HIGH);
                 })
                 .back(35)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.CUSTOM.setCustom(custom.addAndGet(-50)));
+                    lift.moveAndDrop(LinearSlide.Level.RESET);
                 })
                 .forward(35)
                 //1+4
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.HIGH);
+                    lift.moveAndDrop(LinearSlide.Level.HIGH);
                 })
                 .back(35)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.CUSTOM.setCustom(custom.addAndGet(-50)));
+                    lift.moveAndDrop(LinearSlide.Level.RESET);
                 })
                 .forward(35)
                 //1+5
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.HIGH);
+                    lift.moveAndDrop(LinearSlide.Level.HIGH);
                 })
                 .back(35)
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                    lift.moveAndDrop(ScissorLift.Level.RESET);
+                    lift.moveAndDrop(LinearSlide.Level.RESET);
                 })
                 .forward(park)
                 .build();
