@@ -4,14 +4,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.SubSystem;
 
 public class LinearSlide extends SubSystem {
 
-    DcMotorEx lift1;
+    DcMotorEx lift;
     Servo claw;
  //   Servo arm;
 
@@ -56,21 +55,20 @@ public class LinearSlide extends SubSystem {
 
     @Override
     public void init() {
-        lift1 = robot.hardwareMap.get(DcMotorEx.class, "lift1");
+        lift = robot.hardwareMap.get(DcMotorEx.class, "lift1");
         claw = robot.hardwareMap.servo.get("claw");
    //     arm = robot.hardwareMap.servo.get("arm");
-        lift1.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift1.setTargetPositionTolerance(2);
-        lift1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setTargetPositionTolerance(2);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         setClaw(ClawPos.OPEN);
     }
 
     @Override
     public void handle() {
-        lift1.setPower(-robot.gamepad2.right_stick_y);
-
-
-        robot.telemetry.addData("ENCODER_1", lift1.getCurrentPosition());
+        joystickMoveWithLimits(-robot.gamepad2.left_stick_y);
+        robot.telemetry.addData("ENCODER_1", lift.getCurrentPosition());
         robot.telemetry.update();
         if (robot.gamepad2.a) setClaw(ClawPos.OPEN);
         if (robot.gamepad2.b) setClaw(ClawPos.CLOSED);
@@ -79,29 +77,39 @@ public class LinearSlide extends SubSystem {
 
     @Override
     public void stop() {
-        lift1.setPower(0);
-        lift1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setPower(0);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
     public void moveAndDrop(Level level) {
         switch (level) {
             case LOW:
-                lift1.setTargetPosition(rotationsToTicks(Level.LOW.rotations));
+                lift.setTargetPosition(rotationsToTicks(Level.LOW.rotations));
                 break;
             case MID:
-                lift1.setTargetPosition(rotationsToTicks(Level.MID.rotations));
+                lift.setTargetPosition(rotationsToTicks(Level.MID.rotations));
                 break;
             case HIGH:
-                lift1.setTargetPosition(rotationsToTicks(Level.HIGH.rotations));
+                lift.setTargetPosition(rotationsToTicks(Level.HIGH.rotations));
                 break;
             case RESET:
-                lift1.setTargetPosition(rotationsToTicks(Level.RESET.rotations));
+                lift.setTargetPosition(rotationsToTicks(Level.RESET.rotations));
                 break;
         }
-        lift1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        lift1.setPower(1);
+        lift.setPower(1);
+    }
+
+    public void joystickMoveWithLimits(double leftStickY) {
+        if (leftStickY > 0 && lift.getCurrentPosition() < rotationsToTicks(Level.HIGH.rotations)) {
+            lift.setPower(leftStickY);
+        } else if (leftStickY < 0 && lift.getCurrentPosition() > rotationsToTicks(Level.RESET.rotations)) {
+            lift.setPower(leftStickY);
+        } else {
+            lift.setPower(0);
+        }
     }
 
 //    public void turnArm(double degrees) {
@@ -115,8 +123,7 @@ public class LinearSlide extends SubSystem {
 //    }
 
     public void resetEncoder() {
-
-        lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void setClaw(ClawPos pos) {
