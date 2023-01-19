@@ -21,7 +21,7 @@ public class EightTest extends FishloAutonomousProgram {
 
     @Override
     public void preMain() {
-        mecanumDrive = new SampleMecanumDrive(hardwareMap);
+        mecanumDrive = drive.getInstance();
         startPose = new Pose2d(-72+OFFSET, 36, 0);
     }
 
