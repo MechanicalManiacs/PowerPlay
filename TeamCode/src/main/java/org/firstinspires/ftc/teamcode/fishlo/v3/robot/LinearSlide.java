@@ -67,7 +67,7 @@ public class LinearSlide extends SubSystem {
 
     @Override
     public void handle() {
-        joystickMoveWithLimits(-robot.gamepad2.left_stick_y);
+        joystickMoveWithLimits(robot.gamepad2.left_stick_y);
         robot.telemetry.addData("ENCODER_1", lift.getCurrentPosition());
         robot.telemetry.update();
         if (robot.gamepad2.a) setClaw(ClawPos.OPEN);
@@ -79,7 +79,6 @@ public class LinearSlide extends SubSystem {
     public void stop() {
         lift.setPower(0);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
 
     public void moveAndDrop(Level level) {
@@ -98,7 +97,6 @@ public class LinearSlide extends SubSystem {
                 break;
         }
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         lift.setPower(1);
     }
 

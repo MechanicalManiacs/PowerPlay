@@ -53,17 +53,17 @@ public class Vision extends SubSystem {
 
     @Override
     public void handle() {
-        if (first) {
-            close();
-            walmartLimelightPipeline.setResolution(WIDTH, HEIGHT);
-            walmartLimelightPipeline.setFov(FOV);
-            open(walmartLimelightPipeline);
-            first = false;
-        }
-        if (robot.gamepad1.y) {
-            double rad = walmartLimelightPipeline.getRadiansAway();
-            mdrive.turnAsync(rad);
-        }
+//        if (first) {
+//            close();
+//            walmartLimelightPipeline.setResolution(WIDTH, HEIGHT);
+//            walmartLimelightPipeline.setFov(FOV);
+//            open(walmartLimelightPipeline);
+//            first = false;
+//        }
+//        if (robot.gamepad1.y) {
+//            double rad = walmartLimelightPipeline.getRadiansAway();
+//            mdrive.turnAsync(rad);
+//        }
     }
 
     @Override
