@@ -17,10 +17,10 @@ public class LinearSlide extends SubSystem {
     private double ticksPerRev = 384.5;
 
     public enum Level {
-        LOW(-750.0),
-        MID(-1750.0),
-        HIGH(-2000.0),
-        GROUND(-50.0),
+        LOW(750.0),
+        MID(1750.0),
+        HIGH(2000.0),
+        GROUND(50.0),
         RESET(0.0),
         CUSTOM(0.0);
 
@@ -55,11 +55,10 @@ public class LinearSlide extends SubSystem {
 
     @Override
     public void init() {
-        lift = robot.hardwareMap.get(DcMotorEx.class, "lift1");
+        lift = robot.hardwareMap.get(DcMotorEx.class, "lift");
         claw = robot.hardwareMap.servo.get("claw");
    //     arm = robot.hardwareMap.servo.get("arm");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setTargetPositionTolerance(2);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         setClaw(ClawPos.OPEN);

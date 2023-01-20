@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.fishlo.v3.program.utils;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -10,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
 import org.firstinspires.ftc.teamcode.fishlo.v3.robot.VisionPipeline;
 import org.firstinspires.ftc.teamcode.robot.Robot;
+import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,6 +22,8 @@ import java.math.RoundingMode;
 @Config
 public class VisionTest extends FishloAutonomousProgram {
 
+    SampleMecanumDrive mecanumDrive;
+    Pose2d startPose;
     VisionPipeline.ConePosition pos;
 
     double sum;
@@ -30,6 +36,7 @@ public class VisionTest extends FishloAutonomousProgram {
 
     @Override
     public void preMain() {
+        mecanumDrive = drive.getInstance();
         telemetry.addLine("Initialized");
         telemetry.update();
         telemetry.setAutoClear(true);
@@ -37,7 +44,7 @@ public class VisionTest extends FishloAutonomousProgram {
 //        sum = 0;
 //        count = 0;
         while (!isStarted()) {
-            pos = vision.getConePosition();
+            pos = VisionPipeline.ConePosition.POS1;
             telemetry.addData("Cone Position", pos);
             telemetry.update();
             System.out.println("Init pos: " + pos);
@@ -51,16 +58,41 @@ public class VisionTest extends FishloAutonomousProgram {
 
     @Override
     public void main() {
-//        double fp = sum/count;
-//        String dVal = Double.toString(fp);
-//        BigDecimal fp2 = new BigDecimal(dVal);
-//        fp2 = fp2.setScale(0, BigDecimal.ROUND_HALF_UP);
-//        int finalPos = Integer.parseInt(fp2.toString());
-        telemetry.addData("Last Recieved Position", pos);
+        mecanumDrive.setPoseEstimate(startPose);
+        Trajectory traj = null;
+        telemetry.addLine("RUNNING");
         telemetry.update();
-//        telemetry.addData("Rolling Average Position, ", finalPos);
-//        telemetry.update();
-        System.out.println("Final: " + pos);
+        switch (pos) {
+            case POS1:
+                telemetry.addLine("SETTING");
+                telemetry.update();
+                traj = mecanumDrive.trajectoryBuilder(startPose)
+                        .splineTo(new Vector2d(36,-72),Math.toRadians(0))
+                        .build();
+                break;
+            case POS2:
+                telemetry.addLine("SETTING");
+                telemetry.update();
+                traj = mecanumDrive.trajectoryBuilder(startPose)
+                        .splineTo(new Vector2d(36, -36), Math.toRadians(0))
+                        .build();
+                break;
+            case POS3:
+                telemetry.addLine("SETTING");
+                telemetry.update();
+                traj = mecanumDrive.trajectoryBuilder(startPose)
+                        .splineTo(new Vector2d(36, 10), Math.toRadians(0))
+                        .build();
+            default:
+                telemetry.addLine("SETTING");
+                telemetry.update();
+                traj = mecanumDrive.trajectoryBuilder(startPose)
+                        .forward(36)
+                        .build();
+        }
+        telemetry.addLine("FOLLOWING");
+        telemetry.update();
+        mecanumDrive.followTrajectory(traj);
     }
 
 

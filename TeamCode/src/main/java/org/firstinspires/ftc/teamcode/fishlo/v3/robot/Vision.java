@@ -80,11 +80,11 @@ public class Vision extends SubSystem {
         });
     }
 
-    public void open(OpenCvPipeline pipeline) {
+    public void open(OpenCvPipeline p) {
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                webcam.setPipeline(pipeline);
+                webcam.setPipeline(p);
                 webcam.startStreaming(WIDTH, HEIGHT, OpenCvCameraRotation.UPRIGHT);
                 FtcDashboard.getInstance().startCameraStream(webcam, 30);
             }

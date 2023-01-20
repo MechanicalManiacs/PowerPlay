@@ -45,10 +45,10 @@ public class VisionPipeline extends OpenCvPipeline {
     }
 
     public Mat QRCodeAlgo(Mat input) {
-        int middleLeft = input.width() / 3;
-        int middleRight = 2 * middleLeft;
-        input = input.submat(0, input.height(), middleLeft, middleRight);
-        input = zoomCenter(input, 1.5);
+//        int middleLeft = input.width() / 3;
+//        int middleRight = 2 * middleLeft;
+//        input = input.submat(0, input.height(), middleLeft, middleRight);
+//        input = zoomCenter(input, 1.5);
 //        input = sharpen(input);
         QRCodeDetector detector = new QRCodeDetector();
         Mat points = new Mat();

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.fishlo.v3.robot;
 
-import org.apache.commons.lang3.tuple.MutablePair;
+//import org.apache.commons.lang3.tuple.MutablePair;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -22,7 +22,10 @@ public class WalmartLimelightPipeline extends OpenCvPipeline {
 
     private double radiansAway = 0;
 
-    private MutablePair<Integer, Integer> resolution = new MutablePair<>(1280, 720);
+//    private MutablePair<Integer, Integer> resolution = new MutablePair<>(1280, 720);
+    private int width = 1280;
+    private int height = 720;
+
     private double fov = 60;
 
     @Override
@@ -99,7 +102,7 @@ public class WalmartLimelightPipeline extends OpenCvPipeline {
         int y = (int) (moments.get_m01() / moments.get_m00());
 
         //find horizontal angle to center of max contour
-        double angleperpixel = fov / Math.sqrt(Math.pow(resolution.getLeft(), 2) + Math.pow(resolution.getRight(), 2));
+        double angleperpixel = fov / Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
         Point center = new Point(input.size().height / 2.0, input.size().width / 2.0);
         double angle = Math.atan((x - center.x) * angleperpixel);
         double rad = Math.toRadians(angle);
@@ -125,8 +128,8 @@ public class WalmartLimelightPipeline extends OpenCvPipeline {
     }
 
     public void setResolution(int width, int height) {
-        resolution.setLeft(width);
-        resolution.setRight(height);
+        this.width = width;
+        this.height = height;
     }
 
     public double getRadiansAway() {

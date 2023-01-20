@@ -54,12 +54,14 @@ public class RedLeftAuto extends FishloAutonomousProgram {
         mecanumDrive.setPoseEstimate(startPose);
         TrajectorySequence sequence = mecanumDrive.trajectorySequenceBuilder(startPose)
                 .lineTo(new Vector2d(-30,36))
+                .turn(Math.toRadians(30))
+                .turn(Math.toRadians(-30))
                 .splineTo(new Vector2d(-18, 60), Math.toRadians(90))
                 //1+1
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     lift.moveAndDrop(LinearSlide.Level.HIGH);
                 })
-                .back(35)
+                .lineTo(new Vector2d(24,-20))
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     lift.moveAndDrop(LinearSlide.Level.RESET);
                 })
