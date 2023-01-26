@@ -1,8 +1,18 @@
 package org.firstinspires.ftc.teamcode.fishlo.v3.robot;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.control.PIDFController;
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileBuilder;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
+import com.acmerobotics.roadrunner.util.NanoClock;
+import com.arcrobotics.ftclib.controller.PController;
+import com.arcrobotics.ftclib.controller.wpilibcontroller.ElevatorFeedforward;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
@@ -21,22 +31,17 @@ public class LinearSlide extends SubSystem {
         MID(1750.0),
         HIGH(2000.0),
         GROUND(50.0),
-        RESET(0.0),
-        CUSTOM(0.0);
+        RESET(0.0);
 
-        double rotations;
-        private Level(double rotations) {
-            this.rotations = rotations;
-        }
-        public Level setCustom(double val) {
-            CUSTOM.rotations = val;
-            return CUSTOM;
+        double ticks;
+        private Level(double ticks) {
+            this.ticks = ticks;
         }
     }
 
     public enum ClawPos {
-        OPEN(0.0),
-        CLOSED(1.0);
+        OPEN(0.4),
+        CLOSED(0.0);
 
         final double pos;
         private ClawPos(double pos) {
@@ -54,24 +59,29 @@ public class LinearSlide extends SubSystem {
     }
 
     @Override
+
     public void init() {
         lift = robot.hardwareMap.get(DcMotorEx.class, "lift");
         claw = robot.hardwareMap.servo.get("claw");
+        
    //     arm = robot.hardwareMap.servo.get("arm");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setTargetPositionTolerance(2);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        setClaw(ClawPos.OPEN);
+
+        setClaw(ClawPos.CLOSED);
     }
 
     @Override
     public void handle() {
-        joystickMoveWithLimits(robot.gamepad2.left_stick_y);
-        robot.telemetry.addData("ENCODER_1", lift.getCurrentPosition());
-        robot.telemetry.update();
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
+        joystickMoveWithLimits(-robot.gamepad2.left_stick_y*0.7);
+//        lift.setPower(-robot.gamepad2.left_stick_y*0.7);
+//        robot.telemetry.addData("ENCODER OF LIFT", lift.getCurrentPosition());
+//        robot.telemetry.update();
         if (robot.gamepad2.a) setClaw(ClawPos.OPEN);
         if (robot.gamepad2.b) setClaw(ClawPos.CLOSED);
-  //      arm.setPosition(robot.gamepad2.right_stick_x);
     }
 
     @Override
@@ -81,31 +91,19 @@ public class LinearSlide extends SubSystem {
     }
 
     public void moveAndDrop(Level level) {
-        switch (level) {
-            case LOW:
-                lift.setTargetPosition(rotationsToTicks(Level.LOW.rotations));
-                break;
-            case MID:
-                lift.setTargetPosition(rotationsToTicks(Level.MID.rotations));
-                break;
-            case HIGH:
-                lift.setTargetPosition(rotationsToTicks(Level.HIGH.rotations));
-                break;
-            case RESET:
-                lift.setTargetPosition(rotationsToTicks(Level.RESET.rotations));
-                break;
-        }
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift.setPower(1);
+//        lift.setPower(targetPower);
     }
 
     public void joystickMoveWithLimits(double leftStickY) {
-        if (leftStickY > 0 && lift.getCurrentPosition() < rotationsToTicks(Level.HIGH.rotations)) {
-            lift.setPower(leftStickY);
-        } else if (leftStickY < 0 && lift.getCurrentPosition() > rotationsToTicks(Level.RESET.rotations)) {
-            lift.setPower(leftStickY);
-        } else {
+        robot.telemetry.addData("ENCODER OF LIFT", lift.getCurrentPosition());
+        robot.telemetry.update();
+        if (leftStickY <= 0 && lift.getCurrentPosition() <= 5) {
             lift.setPower(0);
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        else {
+            lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            lift.setPower(leftStickY);
         }
     }
 

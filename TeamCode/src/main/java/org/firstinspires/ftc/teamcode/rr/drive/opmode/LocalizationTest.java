@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.rr.drive.opmode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 
 /**
@@ -21,6 +23,7 @@ public class LocalizationTest extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Telemetry t = FtcDashboard.getInstance().getTelemetry();
 
         waitForStart();
 
@@ -40,6 +43,11 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
+
+            t.addData("x", poseEstimate.getX());
+            t.addData("y", poseEstimate.getY());
+            t.addData("heading", poseEstimate.getHeading());
+            t.update();
         }
     }
 }

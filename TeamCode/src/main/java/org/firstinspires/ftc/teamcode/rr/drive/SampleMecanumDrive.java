@@ -54,7 +54,7 @@ import static org.firstinspires.ftc.teamcode.rr.drive.DriveConstants.kV;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 1);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(9, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.6;
 
@@ -111,10 +111,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
-        rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
-        rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
+        leftFront = hardwareMap.get(DcMotorEx.class, "backRight"); //frontLeft
+        leftRear = hardwareMap.get(DcMotorEx.class, "frontRight"); //backLeft
+        rightRear = hardwareMap.get(DcMotorEx.class, "frontLeft"); //backRight
+        rightFront = hardwareMap.get(DcMotorEx.class, "backLeft"); //frontRight
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

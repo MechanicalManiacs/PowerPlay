@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode.fishlo.v3.program.Competition;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
 import org.firstinspires.ftc.teamcode.fishlo.v3.robot.VisionPipeline;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 
 @Autonomous
 public class ParkAuto extends FishloAutonomousProgram {
@@ -26,7 +29,7 @@ public class ParkAuto extends FishloAutonomousProgram {
     public void preMain() {
         mecanumDrive = drive.getInstance();
         lift.resetEncoder();
-        startPose = new Pose2d(-72, 36, 0);
+        startPose = new Pose2d(60, -36, Math.toRadians(180));
         telemetry.addLine("Initialized");
         telemetry.update();
         telemetry.setAutoClear(true);
@@ -40,31 +43,29 @@ public class ParkAuto extends FishloAutonomousProgram {
 
     @Override
     public void main() {
+        if (conePosition == VisionPipeline.ConePosition.NULL) conePosition = VisionPipeline.ConePosition.POS3;
         mecanumDrive.setPoseEstimate(startPose);
+        TrajectorySequence traj = mecanumDrive.trajectorySequenceBuilder(startPose).forward(5).build();
         switch (conePosition) {
             case POS1:
-                Trajectory traj = mecanumDrive.trajectoryBuilder(startPose)
-                        .splineTo(new Vector2d(36,-72),Math.toRadians(0))
-                                .build();
-                mecanumDrive.followTrajectory(traj);
+                traj = mecanumDrive.trajectorySequenceBuilder(startPose)
+                        .splineToConstantHeading(new Vector2d(33,-36), Math.toRadians(180))
+                        .lineTo(new Vector2d(33,-60))
+                        .build();
                 break;
             case POS2:
-                Trajectory traj2 = mecanumDrive.trajectoryBuilder(startPose)
-                        .splineTo(new Vector2d(36, -36), Math.toRadians(0))
+                traj = mecanumDrive.trajectorySequenceBuilder(startPose)
+                        .splineToConstantHeading(new Vector2d(40,-36), Math.toRadians(180))
                         .build();
-                mecanumDrive.followTrajectory(traj2);
                 break;
             case POS3:
-                Trajectory traj3 = mecanumDrive.trajectoryBuilder(startPose)
-                        .splineTo(new Vector2d(36, 10), Math.toRadians(0))
+                traj = mecanumDrive.trajectorySequenceBuilder(startPose)
+                        .splineToConstantHeading(new Vector2d(33,-36), Math.toRadians(180))
+                        .lineTo(new Vector2d(33,-12))
                         .build();
-                mecanumDrive.followTrajectory(traj3);
         }
 
-
-
-
-
+        mecanumDrive.followTrajectorySequence(traj);
     }
 }
 

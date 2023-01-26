@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -29,12 +31,14 @@ public abstract class Robot {
     /**
      * Telemetry information. Telemetry should be used in all robots to aid in debugging.
      */
-    public final Telemetry telemetry;
+    public final MultipleTelemetry telemetry;
     /**
      * Hardware map is how to access hardware. Please cache hardware in the init method. This field
      *  probably won't be used anywhere else.
      */
     public final HardwareMap hardwareMap;
+
+    public final FtcDashboard dashboard;
 
     /**
      * Construct your very own Robot!
@@ -42,7 +46,8 @@ public abstract class Robot {
      */
     public Robot(OpMode opMode) {
         this.opMode = opMode;
-        telemetry = opMode.telemetry;
+        this.dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(opMode.telemetry, dashboard.getTelemetry());
         hardwareMap = opMode.hardwareMap;
 
         subSystems = new HashMap<String, SubSystem>();

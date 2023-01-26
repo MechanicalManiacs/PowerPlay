@@ -23,9 +23,9 @@ public class Drive extends SubSystem {
     public void handle() {
         mDrive.setWeightedDrivePower(
                 new Pose2d(
-                        -robot.gamepad1.left_stick_y,
-                        -robot.gamepad1.left_stick_x,
-                        -robot.gamepad1.right_stick_x
+                        -robot.gamepad1.left_stick_y/0.7,
+                        -robot.gamepad1.left_stick_x/0.7,
+                        -robot.gamepad1.right_stick_x/0.7
                 )
         );
     }

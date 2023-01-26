@@ -26,9 +26,6 @@ public class VisionTest extends FishloAutonomousProgram {
     Pose2d startPose;
     VisionPipeline.ConePosition pos;
 
-    double sum;
-    double count;
-
     @Override
     protected Robot buildRobot() {
         return super.buildRobot();
@@ -40,25 +37,22 @@ public class VisionTest extends FishloAutonomousProgram {
         telemetry.addLine("Initialized");
         telemetry.update();
         telemetry.setAutoClear(true);
+        telemetry.addLine("INIT VISION");
+        telemetry.update();
         vision.initVision();
-//        sum = 0;
-//        count = 0;
+        startPose = new Pose2d(72, -36, Math.toRadians(0));
+        mecanumDrive.setPoseEstimate(startPose);
         while (!isStarted()) {
-            pos = VisionPipeline.ConePosition.POS1;
+            pos = vision.getConePosition();
             telemetry.addData("Cone Position", pos);
             telemetry.update();
-            System.out.println("Init pos: " + pos);
-//            String p = pos.toString();
-//            int len = p.length();
-//            int num = Integer.parseInt(Character.toString(p.charAt(len-1)));
-//            sum += num;
-//            count++;
         }
     }
 
     @Override
     public void main() {
-        mecanumDrive.setPoseEstimate(startPose);
+        telemetry.addLine("ENTERED MAIN");
+        telemetry.update();
         Trajectory traj = null;
         telemetry.addLine("RUNNING");
         telemetry.update();
