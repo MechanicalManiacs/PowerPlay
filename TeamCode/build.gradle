@@ -44,5 +44,4 @@ dependencies {
 
     //ftclib
     implementation 'org.ftclib.ftclib:core:2.0.1'
-
 }

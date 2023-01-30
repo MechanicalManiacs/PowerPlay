@@ -26,6 +26,6 @@ public class LinearSlideTest extends FishloAutonomousProgram {
 
     @Override
     public void main() {
-        lift.moveAndDrop(LinearSlide.Level.LOW);
+        lift.liftSlide(LinearSlide.Level.HIGH);
     }
 }

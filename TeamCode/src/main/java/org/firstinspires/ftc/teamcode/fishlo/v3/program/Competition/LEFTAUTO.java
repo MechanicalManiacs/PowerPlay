@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.fishlo.v3.program.Competition;
 
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.arcrobotics.ftclib.geometry.Pose2d;
 
 import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
-import org.firstinspires.ftc.teamcode.fishlo.v3.robot.VisionPipeline;
+import org.firstinspires.ftc.teamcode.fishlo.v3.robot.utils.VisionPipeline;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 
 public class LEFTAUTO extends FishloAutonomousProgram {
 
