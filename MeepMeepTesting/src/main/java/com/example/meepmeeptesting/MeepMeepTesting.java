@@ -14,7 +14,7 @@ import java.util.Vector;
 public class MeepMeepTesting {
     public static void main(String[] args) {
 
-        int pos = 1;
+        int pos = 2;
         double park = 0;    
         switch (pos) {
             case 1:
@@ -36,7 +36,7 @@ public class MeepMeepTesting {
         double finalPark = park;
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(30, 30, Math.toRadians(60), Math.toRadians(60), 15.2)
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15.2)
                 .setDimensions(12.5984, 12.5984)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-36, 60, Math.toRadians(-90)))
