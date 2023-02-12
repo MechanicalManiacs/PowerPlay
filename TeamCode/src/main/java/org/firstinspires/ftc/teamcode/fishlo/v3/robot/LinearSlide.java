@@ -70,8 +70,8 @@ public class LinearSlide extends SubSystem {
     }
 
     public enum ClawPos {
-        OPEN(1.0),
-        CLOSED(0.0);
+        OPEN(0.0),
+        CLOSED(1.0);
 
         double pos;
         private ClawPos(double pos) {
@@ -123,7 +123,7 @@ public class LinearSlide extends SubSystem {
         if (leftStickY < 0 && lift.getCurrentPosition() <= 20) {
             lift.setPower(0);
         }
-        else if (leftStickY >= 0 && lift.getCurrentPosition() >= 3100) {
+        else if (leftStickY > 0 && lift.getCurrentPosition() >= 3100) {
             lift.setPower(0.1);
         }
         else {

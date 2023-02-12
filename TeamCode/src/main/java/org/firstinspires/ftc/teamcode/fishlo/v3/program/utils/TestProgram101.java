@@ -20,7 +20,6 @@ public class TestProgram101 extends LinearOpMode {
         BL = hardwareMap.get(DcMotorEx.class, "backLeft");
         BR = hardwareMap.get(DcMotorEx.class, "backRight");
         claw = hardwareMap.servo.get("claw");
-        arm = hardwareMap.servo.get("arm");
 
         waitForStart();
 
@@ -31,8 +30,6 @@ public class TestProgram101 extends LinearOpMode {
             if (gamepad1.x) BL.setPower(1);
             if (gamepad1.dpad_up) lift1.setPower(-1);
             if (gamepad1.dpad_down) lift1.setPower(1);
-            if (gamepad1.dpad_left) arm.setPosition(0);
-            if (gamepad1.dpad_right) arm.setPosition(1);
             if (gamepad1.left_bumper) claw.setPosition(0);
             if (gamepad1.right_bumper) claw.setPosition(1);
         }

@@ -22,7 +22,7 @@ import java.util.Vector;
 
 public class Drive extends SubSystem {
 
-    private SampleMecanumDrive mDrive;
+    private SampleMecanumDrive mDrive = new SampleMecanumDrive(robot.hardwareMap);
     private ServoEx leftSpool;
     private ServoEx rightSpool;
     private ServoEx frontSpool;
@@ -46,16 +46,17 @@ public class Drive extends SubSystem {
 
     @Override
     public void init() {
+        Pose2d startPose = new Pose2d(-72, -36, 0);
         leftSpool = robot.hardwareMap.get(ServoEx.class, "leftspool");
         rightSpool = robot.hardwareMap.get(ServoEx.class, "rightspool");
         frontSpool = robot.hardwareMap.get(ServoEx.class, "frontspool");
-        mDrive = new SampleMecanumDrive(robot.hardwareMap);
         driveType = DriveType.ROBOT_CENTRIC;
         prevDriveType = DriveType.ROBOT_CENTRIC;
         robot.gamepad1.type = Gamepad.Type.SONY_PS4;
         robot.gamepad2.type = Gamepad.Type.SONY_PS4;
         mDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        mDrive.getLocalizer().setPoseEstimate(PoseStorage.currentPose);
+//        mDrive.getLocalizer().setPoseEstimate(PoseStorage.currentPose);
+        mDrive.getLocalizer().setPoseEstimate(startPose);
         headingController.setInputBounds(-Math.PI, Math.PI);
         targetPosition = PoseStorage.alliance.highJunctionPosition;
     }
