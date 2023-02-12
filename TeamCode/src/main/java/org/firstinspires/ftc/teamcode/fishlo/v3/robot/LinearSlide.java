@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.fishlo.v3.robot;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficientsEx;
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -18,6 +19,8 @@ public class LinearSlide extends SubSystem {
 
     DcMotorEx lift;
     Servo claw;
+
+    ColorSensor colorSensor;
 
     private static PIDCoefficients positionCoefficients = new PIDCoefficients(0, 0, 0);
     private static MotionConstraint upConstraint = new MotionConstraint(0, 0, 0);
@@ -70,8 +73,8 @@ public class LinearSlide extends SubSystem {
     }
 
     public enum ClawPos {
-        OPEN(1.0),
-        CLOSED(0.0);
+        OPEN(0.0),
+        CLOSED(1.0);
 
         double pos;
         private ClawPos(double pos) {
@@ -93,6 +96,7 @@ public class LinearSlide extends SubSystem {
     public void init() {
         lift = robot.hardwareMap.get(DcMotorEx.class, "lift");
         claw = robot.hardwareMap.servo.get("claw");
+        colorSensor = robot.hardwareMap.colorSensor.get("color");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -110,9 +114,22 @@ public class LinearSlide extends SubSystem {
 //        moveVelocityJoy(-robot.gamepad2.left_stick_y);
 //        lift.setPower(-robot.gamepad2.left_stick_y);
         moveJoyLimits(-robot.gamepad2.left_stick_y);
-        if (robot.gamepad2.x) setClaw(ClawPos.OPEN);
-        if (robot.gamepad2.b) {
+        if (robot.gamepad2.x) {
+            setClaw(ClawPos.OPEN);
+        }
+        else if (robot.gamepad2.b) {
             setClaw(ClawPos.CLOSED);
+        }
+        else {
+            if ((colorSensor.red() > colorSensor.green()) && (colorSensor.red() > colorSensor.blue())) {
+                setClaw(ClawPos.CLOSED);
+            }
+            else if ((colorSensor.blue() > colorSensor.green()) && (colorSensor.blue() > colorSensor.red())){
+                setClaw(ClawPos.CLOSED);
+            }
+            else {
+                setClaw(ClawPos.OPEN);
+            }
         }
     }
 
