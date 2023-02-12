@@ -106,11 +106,28 @@ public class LinearSlide extends SubSystem {
             lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             first = false;
         }
-        lift.setDirection(DcMotorSimple.Direction.FORWARD);
-        moveVelocityJoy(-robot.gamepad2.left_stick_y);
-        if (robot.gamepad2.square) setClaw(ClawPos.OPEN);
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+//        moveVelocityJoy(-robot.gamepad2.left_stick_y);
+//        lift.setPower(-robot.gamepad2.left_stick_y);
+        moveJoyLimits(-robot.gamepad2.left_stick_y);
+        if (robot.gamepad2.x) setClaw(ClawPos.OPEN);
         if (robot.gamepad2.b) {
             setClaw(ClawPos.CLOSED);
+        }
+    }
+
+    public void moveJoyLimits(double leftStickY) {
+        robot.telemetry.addData("ENCODER OF LIFT", lift.getCurrentPosition());
+        robot.telemetry.addData("LEFT STICK Y", leftStickY);
+        robot.telemetry.update();
+        if (leftStickY < 0 && lift.getCurrentPosition() <= 20) {
+            lift.setPower(0);
+        }
+        else if (leftStickY >= 0 && lift.getCurrentPosition() >= 3100) {
+            lift.setPower(0.1);
+        }
+        else {
+            lift.setPower(leftStickY);
         }
     }
 
@@ -177,5 +194,9 @@ public class LinearSlide extends SubSystem {
 
     public ProfiledPID getController() {
         return controller;
+    }
+
+    public void setPower(double power) {
+        lift.setPower(power);
     }
 }
