@@ -1,17 +1,17 @@
 package org.firstinspires.ftc.teamcode.fishlo.v3.robot;
 
 import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficientsEx;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.apache.commons.math3.util.IntegerSequence;
 import org.firstinspires.ftc.teamcode.fishlo.v3.robot.utils.MotionConstraint;
-import org.firstinspires.ftc.teamcode.fishlo.v3.robot.utils.ProfiledPID;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.SubSystem;
+import org.opencv.core.Range;
 
 @Config
 public class LinearSlide extends SubSystem {
@@ -27,51 +27,89 @@ public class LinearSlide extends SubSystem {
 
     private boolean first = true;
 
-    ProfiledPID controller = new ProfiledPID(upConstraint, downConstraint, positionCoefficients);
-
     double slideTargetPosition = 0;
 
     private double ticksPerRev = 384.5;
 
-    public enum Level {
-        LOW(750.0),
-        MID(1750.0),
-        HIGH(2700.0),
-        GROUND(50.0),
-        RESET(0.0),
-        CYCLE_POS_1(0.0),
-        CYCLE_POS_2(0.0),
-        CYCLE_POS_3(0.0),
-        CYCLE_POS_4(0.0),
-        CYCLE_POS_5(0.0),
-        END(0.0);
+    private final double SLIDE_MAX = 3100;
+    private final double SLIDE_MIN = 20;
 
-        double ticks;
-        private Level(double ticks) {
+    private Level currentLevel;
+
+    private boolean override = false;
+
+    public enum Level {
+        LOW(750),
+        MID(1750),
+        HIGH(3050),
+        GROUND(50),
+        RESET(0),
+        CYCLE_POS_1(460),
+        CYCLE_POS_2(350),
+        CYCLE_POS_3(250),
+        CYCLE_POS_4(100),
+        CYCLE_POS_5(0);
+
+        int ticks;
+        private Level(int ticks) {
             this.ticks = ticks;
         }
 
         public Level next() {
+            Level returnLevel = RESET;
             switch (this) {
-                case CYCLE_POS_5:
-                    return CYCLE_POS_4;
-                case CYCLE_POS_4:
-                    return CYCLE_POS_3;
-                case CYCLE_POS_3:
-                    return CYCLE_POS_2;
-                case CYCLE_POS_2:
-                    return CYCLE_POS_1;
                 case CYCLE_POS_1:
-                    return END;
-                default:
-                    return CYCLE_POS_5;
+                    returnLevel = CYCLE_POS_2;
+                    break;
+                case CYCLE_POS_2:
+                    returnLevel = CYCLE_POS_3;
+                    break;
+                case CYCLE_POS_3:
+                    returnLevel = CYCLE_POS_4;
+                    break;
+                case CYCLE_POS_4:
+                    returnLevel = CYCLE_POS_5;
+                    break;
+                case CYCLE_POS_5:
+                    returnLevel = CYCLE_POS_1;
+                    break;
+                case RESET:
+                    returnLevel = CYCLE_POS_1;
+                    break;
+
             }
+            return returnLevel;
+        }
+
+        public Level prev() {
+            Level returnLevel = RESET;
+            switch (this) {
+                case CYCLE_POS_1:
+                    returnLevel = CYCLE_POS_5;
+                    break;
+                case CYCLE_POS_2:
+                    returnLevel = CYCLE_POS_1;
+                    break;
+                case CYCLE_POS_3:
+                    returnLevel = CYCLE_POS_2;
+                    break;
+                case CYCLE_POS_4:
+                    returnLevel = CYCLE_POS_3;
+                    break;
+                case CYCLE_POS_5:
+                    returnLevel = CYCLE_POS_4;
+                    break;
+                case RESET:
+                    returnLevel = CYCLE_POS_1;
+                    break;
+            }
+            return returnLevel;
         }
     }
 
     public enum ClawPos {
-        OPEN(0.0),
-        CLOSED(1.0);
+        OPEN(1.0),
+        CLOSED(0.0);
 
         double pos;
         private ClawPos(double pos) {
@@ -94,36 +132,39 @@ public class LinearSlide extends SubSystem {
         lift = robot.hardwareMap.get(DcMotorEx.class, "lift");
         claw = robot.hardwareMap.servo.get("claw");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        setVelocityPIDCoefficients(velCoefficients);
-        setClaw(ClawPos.OPEN);
+        setClaw(ClawPos.CLOSED);
+        currentLevel = Level.RESET;
     }
 
     @Override
     public void handle() {
-        if (!first) {
-            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            first = false;
+        if (robot.gamepad2.right_bumper) {
+            override = true;
         }
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
-//        moveVelocityJoy(-robot.gamepad2.left_stick_y);
-//        lift.setPower(-robot.gamepad2.left_stick_y);
-        moveJoyLimits(-robot.gamepad2.left_stick_y);
-        if (robot.gamepad2.x) setClaw(ClawPos.OPEN);
+        if (robot.gamepad2.left_bumper) {
+            override = false;
+        }
+        if (override) {
+            lift.setPower(-robot.gamepad2.left_stick_y);
+        }
+        else if (!override) {
+            moveJoyLimits(-robot.gamepad2.left_stick_y);
+        }
+        if (robot.gamepad2.x) setClaw(ClawPos.CLOSED);
         if (robot.gamepad2.b) {
-            setClaw(ClawPos.CLOSED);
+            setClaw(ClawPos.OPEN);
         }
     }
 
     public void moveJoyLimits(double leftStickY) {
-        robot.telemetry.addData("ENCODER OF LIFT", lift.getCurrentPosition());
-        robot.telemetry.addData("LEFT STICK Y", leftStickY);
+        robot.telemetry.addData("LIFT ENCODER", lift.getCurrentPosition());
         robot.telemetry.update();
-        if (leftStickY < 0 && lift.getCurrentPosition() <= 20) {
+        if (leftStickY < 0 && lift.getCurrentPosition() <= SLIDE_MIN) {
             lift.setPower(0);
         }
-        else if (leftStickY > 0 && lift.getCurrentPosition() >= 3100) {
+        else if (leftStickY > 0 && lift.getCurrentPosition() >= SLIDE_MAX) {
             lift.setPower(0.1);
         }
         else {
@@ -137,16 +178,14 @@ public class LinearSlide extends SubSystem {
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void liftSlide(Level level) {
-        updateTargetPosition(level.ticks);
+    public void liftSlide(Level level, double speed) {
+        lift.setTargetPosition(level.ticks);
+        lift.setPower(speed);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void moveVelocityJoy(double leftStickY) {
         lift.setVelocity(leftStickY*2800);
-    }
-
-    public void setVelocityPIDCoefficients(PIDCoefficients coefficients) {
-        lift.setVelocityPIDFCoefficients(coefficients.Kp, coefficients.Ki, coefficients.Kd, 0);
     }
 
     public void resetEncoder() {
@@ -155,48 +194,5 @@ public class LinearSlide extends SubSystem {
 
     public void setClaw(ClawPos pos) {
         claw.setPosition(pos.pos);
-    }
-
-    private int rotationsToTicks(double rotations) {
-        return (int) (ticksPerRev * rotations);
-    }
-
-    public void update() {
-        double measuredPosition = getSlidePosition();
-        double power = controller.calculate(slideTargetPosition, measuredPosition);
-        lift.setPower(power);
-        robot.telemetry.addLine("LIFT")
-                .addData("Measured Slide Position", measuredPosition)
-                .addData("Target Slide Position", slideTargetPosition)
-                .addData("Slide Power", power);
-        robot.telemetry.update();
-    }
-
-    public double getSlidePosition() {
-        return lift.getCurrentPosition();
-    }
-
-    public double getSlideTargetPosition() {
-        return slideTargetPosition;
-    }
-
-    public double getVelocity() {
-        return lift.getVelocity();
-    }
-
-    public void updateTargetPosition(double targetpos) {
-        this.slideTargetPosition = targetpos;
-    }
-
-    public boolean isMovementFinished() {
-        return controller.isDone();
-    }
-
-    public ProfiledPID getController() {
-        return controller;
-    }
-
-    public void setPower(double power) {
-        lift.setPower(power);
     }
 }

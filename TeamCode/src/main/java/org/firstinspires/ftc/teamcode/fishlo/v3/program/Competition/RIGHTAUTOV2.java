@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Autonomous
-public class RIGHTAUTO extends FishloAutonomousProgram {
+public class RIGHTAUTOV2 extends FishloAutonomousProgram {
 
     VisionPipeline.ConePosition position = VisionPipeline.ConePosition.NULL;
     SampleMecanumDrive mecanumDrive;
@@ -64,8 +64,6 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
 
     @Override
     public void main() {
-        timer.reset();
-        AtomicReference<Double> time = new AtomicReference<>((double) 0);
         lift.setClaw(LinearSlide.ClawPos.CLOSED);
         mecanumDrive.setPoseEstimate(startPose);
 
@@ -75,7 +73,8 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
         mecanumDrive.update();
 
         traj2 = mecanumDrive.trajectorySequenceBuilder(mecanumDrive.getPoseEstimate())
-                .forward(drive.getDistance() > 5.5 ? drive.getDistance() - 5.5 : 5.5 - drive.getDistance())
+                .forward(drive.getDistance() > 6.5 ? drive.getDistance() - 6.5 : 6.5 - drive.getDistance())
+                .strafeLeft(2)
                 .waitSeconds(1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.liftSlide(LinearSlide.Level.CYCLE_POS_1, 1);
@@ -89,14 +88,14 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
                 .forward(35)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.setClaw(LinearSlide.ClawPos.CLOSED);
-                    cycleTimer.reset();
                 })
                 .waitSeconds(0.5)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.liftSlide(LinearSlide.Level.HIGH, 1);
                 })
-                .back(4)
-                .turn(Math.toRadians(90))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                .back(46)
+                .resetVelConstraint()
                 .build();
 
         //1+1
@@ -105,7 +104,8 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
         mecanumDrive.update();
 
         traj2 = mecanumDrive.trajectorySequenceBuilder(mecanumDrive.getPoseEstimate())
-                .forward(drive.getDistance() > 5.5 ? drive.getDistance() - 5.5 : 5.5 - drive.getDistance())
+                .forward(drive.getDistance() > 6.5 ? drive.getDistance() - 6.5 : 6.5 - drive.getDistance())
+                .strafeLeft(2)
                 .waitSeconds(0.5)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.liftSlide(LinearSlide.Level.CYCLE_POS_2, 1);
@@ -115,20 +115,25 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
                     lift.setClaw(LinearSlide.ClawPos.OPEN);
                 })
                 .back(2)
-                .turn(Math.toRadians(-84))
-                .forward(35)
+                .waitSeconds(0.5)
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                .strafeRight(10)
+                .resetVelConstraint()
+                .waitSeconds(0.5)
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                .forward(48)
+                .resetVelConstraint()
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.setClaw(LinearSlide.ClawPos.CLOSED);
-                    time.set(cycleTimer.seconds());
                     cycleTimer.reset();
                 })
                 .waitSeconds(0.5)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.liftSlide(LinearSlide.Level.HIGH, 1);
                 })
-                .back(4)
-                .turn(Math.toRadians(84))
-                .strafeLeft(15)
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                .back(46)
+                .resetVelConstraint()
                 .build();
 
         //1+2
@@ -137,17 +142,41 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
         mecanumDrive.update();
 
         traj2 = mecanumDrive.trajectorySequenceBuilder(mecanumDrive.getPoseEstimate())
-                .forward(drive.getDistance() > 5.5 ? drive.getDistance() - 5.5 : 5.5 - drive.getDistance())
+                .forward(drive.getDistance() > 6.5 ? drive.getDistance() - 6.5 : 6.5 - drive.getDistance())
+                .strafeLeft(3)
                 .waitSeconds(0.5)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    lift.liftSlide(LinearSlide.Level.RESET,1);
+                    lift.liftSlide(LinearSlide.Level.CYCLE_POS_3,1);
                 })
                 .waitSeconds(0.5)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.setClaw(LinearSlide.ClawPos.OPEN);
                 })
+                .waitSeconds(0.5)
                 .back(2)
+                .strafeRight(6)
+                .waitSeconds(0.5)
+                .back(3)
                 .build();
+        mecanumDrive.followTrajectorySequence(traj2);
+//        //1+3
+//        mecanumDrive.followTrajectorySequence(traj2);
+//        drive.strafeUntilAligned("LEFT");
+//        mecanumDrive.update();
+//
+//        traj2 = mecanumDrive.trajectorySequenceBuilder(mecanumDrive.getPoseEstimate())
+//                .waitSeconds(0.5)
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    lift.liftSlide(LinearSlide.Level.CYCLE_POS_4,1);
+//                })
+//                .waitSeconds(0.5)
+//                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                    lift.setClaw(LinearSlide.ClawPos.OPEN);
+//                })
+//                .back(2)
+//                .strafeRight(10)
+//                .build();
+//        mecanumDrive.followTrajectorySequence(traj2);
 
         if (position == VisionPipeline.ConePosition.POS1){
             mecanumDrive.followTrajectorySequence(park1);
@@ -158,11 +187,6 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
         else {
             mecanumDrive.followTrajectorySequence(park3);
         }
-        PoseStorage.currentPose = mecanumDrive.getPoseEstimate();
-        telemetry.addLine("TIME")
-                .addData("TOTAL TIME", timer.seconds())
-                .addData("AVG CYCLE TIME", time.get());
-        telemetry.update();
     }
 
     public void generateTrajectory() {
@@ -170,18 +194,21 @@ public class RIGHTAUTO extends FishloAutonomousProgram {
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.liftSlide(LinearSlide.Level.HIGH, 1);
                 })
-                .forward(48)
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH))
+                .forward(60)
+                .resetVelConstraint()
+                .back(12)
                 .strafeLeft(5)
                 .build();
 
         park1 = mecanumDrive.trajectorySequenceBuilder(startPose)
-                .strafeLeft(12)
+                .back(2)
                 .build();
         park2 = mecanumDrive.trajectorySequenceBuilder(startPose)
-                .strafeRight(12)
+                .forward(15)
                 .build();
         park3 = mecanumDrive.trajectorySequenceBuilder(startPose)
-                .strafeRight(30)
+                .forward(48)
                 .build();
 
     }

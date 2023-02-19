@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.fishlo.v3.program.FishloAutonomousProgram;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.rr.trajectorysequence.TrajectorySequence;
 
-@Autonomous
 public class EightTest extends FishloAutonomousProgram {
     SampleMecanumDrive mecanumDrive;
     Pose2d startPose;

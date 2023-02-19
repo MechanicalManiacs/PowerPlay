@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.fishlo.v3.robot.utils.VisionPipeline;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 
-@Autonomous
+
 @Config
 public class VisionTest extends FishloAutonomousProgram {
 

@@ -9,15 +9,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class TestProgram101 extends LinearOpMode {
 
     DcMotorEx lift1, lift2, FL, FR, BL, BR;
-    Servo claw, arm;
+    Servo claw;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
         lift1 = hardwareMap.get(DcMotorEx.class, "lift");
         FL = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        FR = hardwareMap.get(DcMotorEx.class, "frontRight");
-        BL = hardwareMap.get(DcMotorEx.class, "backLeft");
+        FR = hardwareMap.get(DcMotorEx.class, "frontRight"); // backLeft
+        BL = hardwareMap.get(DcMotorEx.class, "backLeft"); //frontRight
         BR = hardwareMap.get(DcMotorEx.class, "backRight");
         claw = hardwareMap.servo.get("claw");
 

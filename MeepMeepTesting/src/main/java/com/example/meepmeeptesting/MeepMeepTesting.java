@@ -39,104 +39,114 @@ public class MeepMeepTesting {
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15.2)
                 .setDimensions(12.5984, 12.5984)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, 60, Math.toRadians(-90)))
-                                .splineTo(new Vector2d(-36, 18), Math.toRadians(-90))
-                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-                                    liftSlide();
+                        drive.trajectorySequenceBuilder(new Pose2d(36, -67, Math.toRadians(90)))
+                                .lineTo(new Vector2d(36, -12))
+                                .UNSTABLE_addTemporalMarkerOffset(-1.2, () -> {
+                                    System.out.println("yaya");
                                 })
-                                .splineTo(new Vector2d(-29, 5.5), Math.toRadians(-45))
+
+                                .splineToConstantHeading(new Vector2d(24, -12), Math.toRadians(125))
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    deposit();
+                                    System.out.println("yaya");
                                 })
-                                .waitSeconds(0.5)
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
-                                .setReversed(false)
-                                .addDisplacementMarker(() -> {
-                                    clawClose();
-                                })
-                                .waitSeconds(0.5)
-                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                                    liftSlide();
-                                })
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
-                                .setReversed(false)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    deposit();
-                                })
-                                .waitSeconds(0.5)
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
-                                .setReversed(false)
-                                .addDisplacementMarker(() -> {
-                                    clawClose();
-                                })
-                                .waitSeconds(0.5)
-                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                                    liftSlide();
-                                })
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
-                                .setReversed(false)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    deposit();
-                                })
-                                .waitSeconds(0.5)
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
-                                .setReversed(false)
-                                .addDisplacementMarker(() -> {
-                                    clawClose();
-                                })
-                                .waitSeconds(0.5)
-                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                                    liftSlide();
-                                })
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
-                                .setReversed(false)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    deposit();
-                                })
-                                .waitSeconds(0.5)
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
-                                .setReversed(false)
-                                .addDisplacementMarker(() -> {
-                                    clawClose();
-                                })
-                                .waitSeconds(0.5)
-                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                                    liftSlide();
-                                })
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
-                                .setReversed(false)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    deposit();
-                                })
-                                .waitSeconds(0.5)
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
-                                .setReversed(false)
-                                .addDisplacementMarker(() -> {
-                                    clawClose();
-                                })
-                                .waitSeconds(0.5)
-                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
-                                    liftSlide();
-                                })
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
-                                .setReversed(false)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    deposit();
-                                })
-                                .waitSeconds(0.5)
-                                .setReversed(true)
-                                .splineToLinearHeading(new Pose2d(finalPark, 12, Math.toRadians(-90)), Math.toRadians(-90))
-                                .setReversed(false)
+                               // .splineToLinearHeading(new Pose2d(30, -5, Math.toRadians(150)), Math.toRadians(150))
+//                                .splineTo(new Vector2d(-36, 18), Math.toRadians(-90))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//                                    liftSlide();
+//                                })
+//                                .splineTo(new Vector2d(-29, 5.5), Math.toRadians(-45))
+//                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                                    deposit();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
+//                                .setReversed(false)
+//                                .addDisplacementMarker(() -> {
+//                                    clawClose();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                                    liftSlide();
+//                                })
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
+//                                .setReversed(false)
+//                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                                    deposit();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
+//                                .setReversed(false)
+//                                .addDisplacementMarker(() -> {
+//                                    clawClose();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                                    liftSlide();
+//                                })
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
+//                                .setReversed(false)
+//                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                                    deposit();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
+//                                .setReversed(false)
+//                                .addDisplacementMarker(() -> {
+//                                    clawClose();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                                    liftSlide();
+//                                })
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
+//                                .setReversed(false)
+//                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                                    deposit();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
+//                                .setReversed(false)
+//                                .addDisplacementMarker(() -> {
+//                                    clawClose();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                                    liftSlide();
+//                                })
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
+//                                .setReversed(false)
+//                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                                    deposit();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-60, 12, Math.toRadians(-180)), Math.toRadians(-180))
+//                                .setReversed(false)
+//                                .addDisplacementMarker(() -> {
+//                                    clawClose();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
+//                                    liftSlide();
+//                                })
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(-29, 5.5, Math.toRadians(-45)), Math.toRadians(-45))
+//                                .setReversed(false)
+//                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+//                                    deposit();
+//                                })
+//                                .waitSeconds(0.5)
+//                                .setReversed(true)
+//                                .splineToLinearHeading(new Pose2d(finalPark, 12, Math.toRadians(-90)), Math.toRadians(-90))
+//                                .setReversed(false)
                                 .build()
                 );
 

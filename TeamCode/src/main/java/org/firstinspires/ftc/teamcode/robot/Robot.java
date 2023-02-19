@@ -31,7 +31,7 @@ public abstract class Robot {
     /**
      * Telemetry information. Telemetry should be used in all robots to aid in debugging.
      */
-    public final MultipleTelemetry telemetry;
+    public final Telemetry telemetry;
     /**
      * Hardware map is how to access hardware. Please cache hardware in the init method. This field
      *  probably won't be used anywhere else.
@@ -47,7 +47,7 @@ public abstract class Robot {
     public Robot(OpMode opMode) {
         this.opMode = opMode;
         this.dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(opMode.telemetry, dashboard.getTelemetry());
+        telemetry = opMode.telemetry;
         hardwareMap = opMode.hardwareMap;
 
         subSystems = new HashMap<String, SubSystem>();
