@@ -8,4 +8,5 @@ Make changes on a seperate branch for the feature and then create a pull request
 git checkout -b "[name of feature]"
 
 ## When writing a commit message please use the right format
+
 git commit -m "[changes made in feature]"
