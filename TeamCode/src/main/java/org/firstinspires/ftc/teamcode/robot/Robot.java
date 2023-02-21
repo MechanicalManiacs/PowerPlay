@@ -40,6 +40,8 @@ public abstract class Robot {
 
     public final FtcDashboard dashboard;
 
+    public static boolean isPlaying = false;
+
     /**
      * Construct your very own Robot!
      * @param opMode the OpMode that this instance of a robot will be used in.
@@ -127,5 +129,13 @@ public abstract class Robot {
     public final SubSystem eOverrideSubSystem(String name, SubSystem subSystem) {
         subSystems.put(name, subSystem);
         return subSystem;
+    }
+
+    public final HashMap<String, SubSystem> getSubSystems() {
+        return subSystems;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
 }

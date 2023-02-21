@@ -32,6 +32,7 @@ public class LEFTAUTOV2 extends FishloAutonomousProgram {
 
     @Override
     protected Robot buildRobot() {
+        System.out.println(5);
         return super.buildRobot();
     }
 

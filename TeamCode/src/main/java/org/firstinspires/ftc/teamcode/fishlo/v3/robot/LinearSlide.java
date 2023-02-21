@@ -159,8 +159,8 @@ public class LinearSlide extends SubSystem {
     }
 
     public void moveJoyLimits(double leftStickY) {
-        robot.telemetry.addData("LIFT ENCODER", lift.getCurrentPosition());
-        robot.telemetry.update();
+//        robot.telemetry.addData("LIFT ENCODER", lift.getCurrentPosition());
+//        robot.telemetry.update();
         if (leftStickY < 0 && lift.getCurrentPosition() <= SLIDE_MIN) {
             lift.setPower(0);
         }

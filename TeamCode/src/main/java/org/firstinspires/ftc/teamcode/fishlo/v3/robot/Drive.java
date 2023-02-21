@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.fishlo.v3.robot;
 
+import android.widget.ArrayAdapter;
+
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -16,19 +18,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.apache.commons.math3.analysis.integration.IterativeLegendreGaussIntegrator;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.fishlo.v3.program.utils.Playback;
 import org.firstinspires.ftc.teamcode.fishlo.v3.robot.utils.PoseStorage;
 import org.firstinspires.ftc.teamcode.rr.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.rr.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.SubSystem;
 import org.firstinspires.ftc.teamcode.rr.drive.StandardTrackingWheelLocalizer;
+import org.json.JSONArray;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 import java.util.Vector;
 
 public class Drive extends SubSystem {
 
     private SampleMecanumDrive mDrive;
-    private DriveType driveType;
 
     private Vector2d targetPosition;
     private PIDFController headingController;
@@ -45,42 +52,55 @@ public class Drive extends SubSystem {
 
     private boolean first = false;
 
+    private List<List<Double>> data;
+
+    int i = 1;
+
     public Drive(Robot robot) {
         super(robot);
     }
 
-    public enum DriveType {
-        ROBOT_CENTRIC,
-        FIELD_CENTRIC,
-        ALIGN_TO_HIGH_JUNCTION
-    }
 
     @Override
     public void init() {
         mDrive = new SampleMecanumDrive(robot.hardwareMap);
-        driveType = DriveType.ROBOT_CENTRIC;
-        mDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        mDrive.getLocalizer().setPoseEstimate(PoseStorage.currentPose);
-        headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
-        farHighJunction = new Vector2d(-24, 0);
-        nearHighJunction = new Vector2d(24, 0);
-        leftHighJunction = new Vector2d(0, -24);
-        rightHighJunction = new Vector2d(0, 24);
-        headingController.setInputBounds(-Math.PI, Math.PI);
         distanceSensor = robot.hardwareMap.get(DistanceSensor.class, "distance");
         ledLight1 = robot.hardwareMap.led.get("led1");
         ledlight2 = robot.hardwareMap.led.get("led2");
+        data = getRecordedData();
     }
 
     @Override
     public void handle() {
-        double leftY = applyDeadzone(-robot.gamepad1.left_stick_x*0.75);
-        double leftX = applyDeadzone(-robot.gamepad1.left_stick_y*0.75);
-        double rightX = applyDeadzone(-robot.gamepad1.right_stick_x/2);
+        double leftY = 0;
+        double leftX = 0;
+        double rightX = 0;
+
+        if (Robot.isPlaying) {
+            if (i < data.size() - 1) {
+                try {
+                    leftY = data.get(i).get(0);
+                    leftX = data.get(i).get(1);
+                    rightX = data.get(i).get(2);
+                    i++;
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                leftY = 0;
+                leftX = 0;
+                rightX = 0;
+            }
+        }
+        else {
+            leftY = applyDeadzone(-robot.gamepad1.left_stick_y*0.75);
+            leftX = applyDeadzone(-robot.gamepad1.left_stick_x*0.75);
+            rightX = applyDeadzone(-robot.gamepad1.right_stick_x/2);
+        }
         Pose2d drivePowers = new Pose2d();
-        if (robot.gamepad1.y) driveType = DriveType.ALIGN_TO_HIGH_JUNCTION;
-        if (robot.gamepad1.b) driveType = DriveType.FIELD_CENTRIC;
-        Vector2d translation2 = new Vector2d(leftX, leftY);
+        Vector2d translation2 = new Vector2d(leftY, leftX);
         drivePowers = new Pose2d(translation2.getX(), translation2.getY(), rightX);
         mDrive.setWeightedDrivePower(drivePowers);
     }
@@ -142,5 +162,35 @@ public class Drive extends SubSystem {
             ledLight1.enableLight(false);
             ledlight2.enableLight(false);
         }
+    }
+
+    public List<List<Double>> getRecordedData() {
+        List<List<Double>> records = new ArrayList<>();
+        try {
+            File f = new File("/sdcard/FIRST/record.csv");
+            Scanner sc = new Scanner(f);
+            while (sc.hasNextLine()) {
+                records.add(getFromLine(sc.nextLine()));
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return records;
+    }
+
+    public List<Double> getFromLine(String line) {
+        List<Double> values = new ArrayList<>();
+        try {
+            Scanner sc = new Scanner(line);
+            sc.useDelimiter(",");
+            while (sc.hasNext()) {
+                values.add(sc.nextDouble());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return values;
     }
 }
